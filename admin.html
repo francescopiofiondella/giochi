@@ -168,18 +168,23 @@ label.f{display:grid;gap:.3rem;font-size:.82rem;color:var(--m);font-weight:600}
 <section id="ad" class="hide">
 <div class="top"><h1>Pannello admin</h1><a class="btn ghost" href="index.html">Vedi sito</a><button id="out" class="ghost">Esci</button></div>
 
-<div class="panel"><h2 style="margin:0">1 &middot; Cartella del sito</h2>
-<p class="note" style="margin:0">Per pubblicare i giochi, collega la cartella dove si trova <code>index.html</code> (serve Chrome o Edge su computer). Il collegamento resta salvato.</p>
-<div class="row"><button id="conn">Collega cartella del sito</button><small id="cst"></small></div></div>
+<div class="panel"><h2 style="margin:0">1 &middot; Collegamento GitHub</h2>
+<p class="note" style="margin:0">Si fa una volta per dispositivo (PC e telefono). Serve un token <b>fine-grained</b> creato su GitHub &rarr; Settings &rarr; Developer settings &rarr; Personal access tokens, limitato a questo solo repository con permesso <b>Contents: Read and write</b>.</p>
+<label class="f">Utente o organizzazione<input id="gh-o" placeholder="es. isissmatese" autocapitalize="none" spellcheck="false"></label>
+<label class="f">Repository<input id="gh-r" placeholder="es. gaming-zone" autocapitalize="none" spellcheck="false"></label>
+<label class="f">Branch<input id="gh-b" placeholder="main" value="main" autocapitalize="none" spellcheck="false"></label>
+<label class="f">Token<input id="gh-t" type="password" placeholder="github_pat_..." autocomplete="off" autocapitalize="none" spellcheck="false"></label>
+<div class="row"><button id="conn" type="button">Salva e verifica</button><button id="disc" type="button" class="ghost">Scollega</button><small id="cst"></small></div></div>
 
 <form id="gf" class="panel"><h2 style="margin:0">2 &middot; Aggiungi un gioco</h2>
 <label class="f">Nome del gioco<input name="name" placeholder="Es. Halloween Sport VR" required></label>
 <label class="f">Categoria<select name="category"><option value="pc">&#128421; PC</option><option value="mobile">&#128241; Mobile</option><option value="vr">&#129405; VR</option></select></label>
 <label class="f">Descrizione (facoltativa)<textarea name="description" rows="2" placeholder="Una riga sul gioco"></textarea></label>
 <div class="f" style="display:grid;gap:.3rem;font-size:.82rem;color:var(--m);font-weight:600">Come vuoi aggiungerlo?
-<div class="seg" id="src"><label><input type="radio" name="src" value="link" checked>&#128279; Link</label><label><input type="radio" name="src" value="file">&#128196; Solo file index</label><label><input type="radio" name="src" value="folder">&#128193; Cartella intera</label></div></div>
+<div class="seg" id="src"><label><input type="radio" name="src" value="link" checked>&#128279; Link</label><label><input type="radio" name="src" value="file">&#128196; Solo file index</label><label><input type="radio" name="src" value="folder">&#128193; Cartella intera</label><label><input type="radio" name="src" value="zip">&#128230; File ZIP</label></div></div>
 <label class="f" id="b-link">Indirizzo del gioco<input name="url" type="url" placeholder="https://..."></label>
 <div class="row hide" id="b-file"><label class="file">Scegli il file index.html<input id="fi" type="file" accept=".html,.htm" hidden></label><small id="fin"></small></div>
+<div class="row hide" id="b-zip"><label class="file">Scegli il file .zip del gioco<input id="zi" type="file" accept=".zip,application/zip" hidden></label><small id="zin"></small></div>
 <div class="row hide" id="b-folder"><label class="file">Scegli la cartella del gioco<input id="di" type="file" webkitdirectory multiple hidden></label><small id="din"></small></div>
 <div class="row"><label><input type="checkbox" name="webxr"> WebXR verificato</label><label><input type="checkbox" name="featured"> In evidenza</label></div>
 <div class="row"><button class="btn big">Salva gioco</button></div><p id="msg"></p></form>
@@ -210,42 +215,87 @@ $('#lf').onsubmit=async e=>{e.preventDefault();const er=$('#err');er.hidden=fals
  try{if($('#u').value.trim().toLowerCase()===CFG.user&&await sha($('#p').value.trim())===CFG.hash){admin=true;try{sessionStorage.setItem('gz_admin','1')}catch{}show()}else er.textContent='Credenziali errate. Usa l\'occhio per controllare cosa scrivi.'}
  catch(x){er.textContent='Errore: '+x.message}};
 $('#out').onclick=()=>{try{sessionStorage.removeItem('gz_admin')}catch{}admin=false;show()};
-/* cartella del sito (salvata nel browser) */
-const idb=(m,v)=>new Promise(r=>{const o=indexedDB.open('gz',1);o.onupgradeneeded=()=>o.result.createObjectStore('k');o.onerror=()=>r();o.onsuccess=()=>{const s=o.result.transaction('k','readwrite').objectStore('k'),q=m==='get'?s.get('dir'):s.put(v,'dir');q.onsuccess=()=>r(q.result);q.onerror=()=>r()}});
-async function getRoot(ask){if(root)return root;try{const h=await idb('get');if(h){let p=await h.queryPermission({mode:'readwrite'});if(p!=='granted'&&ask)p=await h.requestPermission({mode:'readwrite'});if(p==='granted')return root=h}}catch{}return null}
-const wr=async(d,n,data)=>{const w=await(await d.getFileHandle(n,{create:true})).createWritable();await w.write(data);await w.close()};
-const gdir=async()=>(await getRoot(true)).getDirectoryHandle('games',{create:true});
-async function writeIndex(g){const n=[];for await(const[k,h]of g.entries())if(h.kind==='directory'&&!k.startsWith('.'))n.push(k);await wr(g,'index.json',JSON.stringify({folders:n},null,2))}
-async function stat(){const r=await getRoot(false);$('#cst').textContent=r?'\u2714 collegata ('+r.name+')':'non collegata'}
-$('#conn').onclick=async()=>{if(!window.showDirectoryPicker){alert('Questo browser non supporta il collegamento alla cartella. Usa Chrome o Edge su computer.');return}try{root=await showDirectoryPicker({mode:'readwrite'});await idb('put',root);await stat();load()}catch{}};
+/* ===== GitHub ===== */
+const LSg={get(k){try{return localStorage.getItem(k)||''}catch{return ''}},set(k,v){try{localStorage.setItem(k,v)}catch{}},del(k){try{localStorage.removeItem(k)}catch{}}};
+const GH=()=>({o:LSg.get('gh_o'),r:LSg.get('gh_r'),b:LSg.get('gh_b')||'main',t:LSg.get('gh_t')});
+async function api(path,opt={}){const c=GH();if(!c.t)throw new Error('Collega prima GitHub (punto 1).');
+ const r=await fetch('https://api.github.com/repos/'+c.o+'/'+c.r+path,{...opt,headers:{'Authorization':'Bearer '+c.t,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json',...(opt.headers||{})},body:opt.body?JSON.stringify(opt.body):undefined});
+ if(!r.ok){let m='';try{m=(await r.json()).message}catch{}throw new Error('GitHub '+r.status+(m?': '+m:'')+(r.status===401?' (token non valido o scaduto)':r.status===403||r.status===404?' (controlla permessi del token e nome repository)':''))}
+ return r.status===204?null:r}
+const japi=async(p,o)=>(await api(p,o)).json();
+const b64=buf=>{const u=new Uint8Array(buf);let s='';for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s)};
+const txt=s=>b64(new TextEncoder().encode(s));
+const fresh=async()=>{const c=GH(),ref=await japi('/git/ref/heads/'+encodeURIComponent(c.b)),cm=await japi('/git/commits/'+ref.object.sha);return{commit:ref.object.sha,tree:cm.tree.sha}};
+/* un solo commit con tutte le modifiche: [{path, content(base64)} | {path, del:true}] */
+async function commit(changes,message,onP){
+ const c=GH(),base=await fresh(),tree=[];let n=0;
+ for(const ch of changes){
+  if(ch.del){tree.push({path:ch.path,mode:'100644',type:'blob',sha:null});continue}
+  const bl=await japi('/git/blobs',{method:'POST',body:{content:ch.content,encoding:'base64'}});
+  tree.push({path:ch.path,mode:'100644',type:'blob',sha:bl.sha});n++;onP&&onP(n)}
+ const nt=await japi('/git/trees',{method:'POST',body:{base_tree:base.tree,tree}});
+ const nc=await japi('/git/commits',{method:'POST',body:{message,tree:nt.sha,parents:[base.commit]}});
+ await api('/git/refs/heads/'+encodeURIComponent(c.b),{method:'PATCH',body:{sha:nc.sha}})}
+async function folders(){const ref=await fresh(),t=await japi('/git/trees/'+ref.tree+'?recursive=1');
+ const paths=t.tree.filter(x=>x.type==='blob').map(x=>x.path);
+ return{paths,ids:[...new Set(paths.filter(p=>p.startsWith('games/')&&p.split('/').length>=3).map(p=>p.split('/')[1]))].filter(k=>!k.startsWith('.'))}}
+const indexFile=ids=>({path:'games/index.json',content:txt(JSON.stringify({folders:ids},null,2))});
+async function stat(){const c=GH();$('#cst').textContent=c.t&&c.o&&c.r?'✔ '+c.o+'/'+c.r+' ('+c.b+')':'non collegato'}
+function fill(){let o=LSg.get('gh_o'),r=LSg.get('gh_r');
+ if(!o&&/\.github\.io$/.test(location.hostname)){o=location.hostname.split('.')[0];const p=location.pathname.split('/')[1];r=p&&!/\.html?$/i.test(p)?p:o+'.github.io'}
+ $('#gh-o').value=o;$('#gh-r').value=r;$('#gh-b').value=LSg.get('gh_b')||'main';$('#gh-t').value=LSg.get('gh_t')}
+$('#conn').onclick=async()=>{const o=$('#gh-o').value.trim(),r=$('#gh-r').value.trim(),b=$('#gh-b').value.trim()||'main',t=$('#gh-t').value.trim();
+ if(!o||!r||!t){$('#cst').textContent='Compila tutti i campi';return}
+ LSg.set('gh_o',o);LSg.set('gh_r',r);LSg.set('gh_b',b);LSg.set('gh_t',t);$('#cst').textContent='Verifica…';
+ try{const j=await japi('');if(j.permissions&&!j.permissions.push)throw new Error('Il token non ha permesso di scrittura sul repository.');await fresh();stat();load()}
+ catch(e){$('#cst').textContent='✖ '+e.message}};
+$('#disc').onclick=()=>{LSg.del('gh_t');$('#gh-t').value='';stat();$('#list').innerHTML=''};
 /* elenco */
-async function load(){let L=[];try{const g=await gdir().catch(()=>null);if(g){for await(const[k,h]of g.entries()){if(h.kind!=='directory'||k.startsWith('.'))continue;let m={};try{m=JSON.parse(await(await(await h.getFileHandle('game.json')).getFile()).text())}catch{}L.push({id:k,name:m.name||k,category:m.category||'pc',url:m.url||''})}}
- else{const j=await(await fetch('games/index.json',{cache:'no-store'})).json();for(const k of(j.folders||j)){let m={};try{m=await(await fetch('games/'+encodeURIComponent(k)+'/game.json',{cache:'no-store'})).json()}catch{}L.push({id:k,name:m.name||k,category:m.category||'pc',url:m.url||''})}}}catch{}
- items=L;$('#list').innerHTML=L.length?L.map(g=>`<div class="gi"><b>${esc(g.name)}</b><i class="b ${esc(g.category)}">${CATS[g.category]||''}</i><small>${g.url?'link':'file'}</small><button class="ghost" data-del="${esc(g.id)}">Elimina</button></div>`).join(''):'<p class="note">Nessun gioco trovato (collega la cartella del sito per vedere l\'elenco).</p>'}
+async function load(){let L=[];
+ try{const f=await folders();
+  for(const k of f.ids){let m={};if(f.paths.includes('games/'+k+'/game.json')){try{m=await(await api('/contents/games/'+k.split('/').map(encodeURIComponent).join('/')+'/game.json?ref='+encodeURIComponent(GH().b),{headers:{'Accept':'application/vnd.github.raw+json'}})).json()}catch{}}
+   L.push({id:k,name:m.name||k,category:m.category||'pc',url:m.url||''})}
+ }catch(e){$('#list').innerHTML='<p class="note">'+esc(e.message)+'</p>';return}
+ items=L;$('#list').innerHTML=L.length?L.map(g=>`<div class="gi"><b>${esc(g.name)}</b><i class="b ${esc(g.category)}">${CATS[g.category]||''}</i><small>${g.url?'link':'file'}</small><button class="ghost" data-del="${esc(g.id)}">Elimina</button></div>`).join(''):'<p class="note">Nessun gioco nel repository.</p>'}
 $('#rs').onclick=load;
-$('#list').onclick=async e=>{const id=e.target.dataset?.del;if(!id||!confirm('Eliminare questo gioco?'))return;try{const g=await gdir();await g.removeEntry(id,{recursive:true});await writeIndex(g);load()}catch{alert('Collega prima la cartella del sito.')}};
+$('#list').onclick=async e=>{const id=e.target.dataset?.del;if(!id||!confirm('Eliminare questo gioco?'))return;
+ try{const f=await folders(),ch=f.paths.filter(p=>p.startsWith('games/'+id+'/')).map(p=>({path:p,del:true}));
+  ch.push(indexFile(f.ids.filter(k=>k!==id)));await commit(ch,'Elimina gioco '+id);msg('Eliminato. Sparisce dal sito tra circa un minuto.','ok');load()}catch(x){alert(x.message)}};
 /* modulo */
 const F=()=>$('#gf').elements;
-document.querySelectorAll('input[name=src]').forEach(r=>r.onchange=()=>{const v=document.querySelector('input[name=src]:checked').value;['link','file','folder'].forEach(k=>$('#b-'+k).classList.toggle('hide',k!==v))});
+document.querySelectorAll('input[name=src]').forEach(r=>r.onchange=()=>{const v=document.querySelector('input[name=src]:checked').value;['link','file','folder','zip'].forEach(k=>$('#b-'+k).classList.toggle('hide',k!==v))});
 $('#fi').onchange=e=>$('#fin').textContent=e.target.files[0]?.name||'';
 $('#di').onchange=e=>{const fs=[...e.target.files];$('#din').textContent=fs.length?fs[0].webkitRelativePath.split('/')[0]+' \u00b7 '+fs.length+' file':'';if(fs.length&&!F().name.value)F().name.value=fs[0].webkitRelativePath.split('/')[0].replace(/[-_]+/g,' ')};
-$('#gf').onsubmit=async e=>{e.preventDefault();const f=F(),mode=document.querySelector('input[name=src]:checked').value,name=f.name.value.trim(),id=slug(name);
+const needZip=()=>window.JSZip?Promise.resolve():new Promise((ok,ko)=>{const x=document.createElement('script');x.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';x.onload=ok;x.onerror=()=>ko(new Error('Libreria ZIP non caricata (serve cdnjs.cloudflare.com).'));document.head.append(x)});
+$('#zi').onchange=e=>$('#zin').textContent=e.target.files[0]?.name||'';
+$('#gf').onsubmit=async e=>{e.preventDefault();const f=F(),mode=document.querySelector('input[name=src]:checked').value,name=f.name.value.trim(),id=slug(name),btn=e.submitter;
  if(!id){msg('Nome non valido','err');return}
+ if(!GH().t){msg('Collega prima GitHub (punto 1).','err');return}
  const meta={name,description:f.description.value.trim(),category:f.category.value,compat:[f.category.value],webxr:f.webxr.checked,featured:f.featured.checked,added:new Date().toISOString().slice(0,10),file:'index.html'};
- let files=[],html='index.html';
- if(mode==='link'){const u=f.url.value.trim();if(!/^https?:\/\//i.test(u)){msg('Inserisci un indirizzo che inizi con http:// o https://','err');return}meta.url=u}
- else if(mode==='file'){const x=$('#fi').files[0];if(!x){msg('Scegli il file index.html','err');return}files=[x]}
- else{files=[...$('#di').files];if(!files.length){msg('Scegli la cartella del gioco','err');return}
-  const top=files.map(x=>x.webkitRelativePath.split('/')).filter(p=>p.length===2).map(p=>p[1]);html=top.find(x=>/^index\.html?$/i.test(x))||top.find(x=>/\.html?$/i.test(x));if(!html){msg('Nella cartella non c\'\u00e8 nessun file HTML','err');return}meta.file=html}
- const g=await gdir().catch(()=>null);
- if(!g){ // senza cartella collegata
-  if(mode==='link'){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(meta,null,2)],{type:'application/json'}));a.download='game.json';a.click();msg('Cartella non collegata: ho scaricato game.json. Mettilo in games/'+id+'/ sul sito.','note')}
-  else msg('Collega prima la cartella del sito (punto 1).','err');return}
- try{msg('Salvataggio\u2026');const fd=await g.getDirectoryHandle(id,{create:true});
-  if(mode==='file')await wr(fd,'index.html',files[0]);
-  if(mode==='folder')for(const x of files){const p=x.webkitRelativePath.split('/').slice(1);let d=fd;for(const s of p.slice(0,-1))d=await d.getDirectoryHandle(s,{create:true});await wr(d,p.at(-1),x)}
-  await wr(fd,'game.json',JSON.stringify(meta,null,2));await writeIndex(g);msg('Gioco salvato \u2714 \u2014 ora compare nel sito.','ok');$('#gf').reset();['file','folder'].forEach(k=>$('#b-'+k).classList.add('hide'));$('#b-link').classList.remove('hide');$('#fin').textContent=$('#din').textContent='';load()}
- catch(err){msg('Errore durante il salvataggio: '+err.message,'err')}};
-function init(){stat();load()}
+ const out=[];
+ try{
+  if(mode==='link'){const u=f.url.value.trim();if(!/^https?:\/\//i.test(u)){msg('Inserisci un indirizzo che inizi con http:// o https://','err');return}meta.url=u}
+  else if(mode==='file'){const x=$('#fi').files[0];if(!x){msg('Scegli il file index.html','err');return}out.push({rel:'index.html',buf:await x.arrayBuffer()})}
+  else if(mode==='folder'){const fs=[...$('#di').files];if(!fs.length){msg('Scegli la cartella del gioco','err');return}
+   for(const x of fs)out.push({rel:x.webkitRelativePath.split('/').slice(1).join('/'),buf:await x.arrayBuffer()})}
+  else{const z=$('#zi').files[0];if(!z){msg('Scegli il file ZIP','err');return}await needZip();const zip=await JSZip.loadAsync(z);
+   const names=Object.keys(zip.files).filter(n=>!zip.files[n].dir&&!/(^|\/)(__MACOSX|\.DS_Store)/.test(n));
+   const tops=new Set(names.map(n=>n.split('/')[0])),strip=tops.size===1&&names.every(n=>n.includes('/'))?1:0;
+   for(const n of names)out.push({rel:n.split('/').slice(strip).join('/'),buf:await zip.files[n].async('arraybuffer')})}
+  if(mode!=='link'){
+   const tops=out.map(o=>o.rel).filter(r=>!r.includes('/')),html=tops.find(x=>/^index\.html?$/i.test(x))||tops.find(x=>/\.html?$/i.test(x));
+   if(!html){msg('Non trovo nessun file HTML nella cartella principale del gioco.','err');return}meta.file=html;
+   const big=out.find(o=>o.buf.byteLength>100*1024*1024);if(big){msg('Il file '+big.rel+' supera 100 MB: GitHub non lo accetta.','err');return}}
+  if(btn)btn.disabled=true;msg('Controllo repository…');
+  const cur=await folders();if(cur.ids.includes(id)){msg('Esiste già un gioco con questo nome. Eliminalo prima o cambia nome.','err');return}
+  const ch=out.map(o=>({path:'games/'+id+'/'+o.rel,content:b64(o.buf)}));
+  ch.push({path:'games/'+id+'/game.json',content:txt(JSON.stringify(meta,null,2))});
+  ch.push(indexFile([...cur.ids,id]));
+  msg('Caricamento su GitHub… (0/'+ch.length+')');
+  await commit(ch,'Aggiungi gioco '+name,n=>msg('Caricamento su GitHub… ('+n+'/'+ch.length+')'));
+  msg('Gioco caricato ✔ — compare nel sito entro circa un minuto (pubblicazione di GitHub Pages).','ok');
+  $('#gf').reset();['file','folder','zip'].forEach(k=>$('#b-'+k).classList.add('hide'));$('#b-link').classList.remove('hide');$('#fin').textContent=$('#din').textContent=$('#zin').textContent='';load()}
+ catch(err){msg('Errore: '+err.message,'err')}finally{if(btn)btn.disabled=false}};
+function init(){fill();stat();if(GH().t)load()}
 show();
 </script></body></html>

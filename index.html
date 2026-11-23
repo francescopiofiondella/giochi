@@ -205,7 +205,7 @@ const gurl=g=>GAMES+encodeURIComponent(g.id)+'/';
 
 /* ---------- Scoperta automatica dei giochi ---------- */
 async function jget(u){const r=await fetch(u,{cache:'no-store'});if(!r.ok)throw 0;return r.json()}
-async function discover(){
+async function discover(first){
  let names=[];
  try{const j=await jget(GAMES+'index.json');names.push(...((Array.isArray(j)?j:j.folders)||[]))}catch{}
  try{ // elenco della cartella (autoindex del server)
@@ -214,13 +214,15 @@ async function discover(){
    [...d.querySelectorAll('a[href]')].forEach(a=>{const u=new URL(a.getAttribute('href'),base),p=u.pathname;
     if(u.origin===base.origin&&p.startsWith(base.pathname)&&p.endsWith('/')&&p!==base.pathname){const n=decodeURIComponent(p.slice(base.pathname.length,-1));if(n&&!n.includes('/'))names.push(n)}})}
  }catch{}
+ if(!names.length&&first&&/\.github\.io$/.test(location.hostname)){ // GitHub Pages non elenca le cartelle: chiedo l'elenco all'API di GitHub
+  try{const o=location.hostname.split('.')[0],p=location.pathname.split('/')[1],repo=p&&!/\.html?$/i.test(p)?p:o+'.github.io',j=await jget('https://api.github.com/repos/'+o+'/'+repo+'/contents/games');names.push(...j.filter(x=>x.type==='dir').map(x=>x.name))}catch{}}
  names=[...new Set(names)].filter(n=>n&&!n.startsWith('.'));
  return Promise.all(names.map(async(f,i)=>{let m={};try{m=await jget(GAMES+encodeURIComponent(f)+'/game.json')}catch{}
   const c=CATS[m.category]?m.category:'pc';
   return{id:f,i,name:m.name||f.replace(/[-_]+/g,' ').replace(/^./,x=>x.toUpperCase()),description:m.description||'',category:c,compat:m.compat||[c],webxr:!!m.webxr,featured:!!m.featured,added:m.added||'',file:m.file||'index.html',cover:m.cover||'',url:/^https?:\/\//i.test(m.url||'')?m.url:''}}));
 }
 async function refresh(first){
- const n=await discover();if(!first&&JSON.stringify(n)===JSON.stringify(games))return;
+ const n=await discover(first);if(!first&&JSON.stringify(n)===JSON.stringify(games))return;
  const added=!first&&n.length>games.length;games=n;if(first)return;if(added)toast('🎮 Nuovi giochi disponibili!');
  const r=location.hash.slice(1).split('/')[0]||'home';
  if(r==='home')home();else if(refill)refill();else if(r==='admin'&&tbl)tbl();
