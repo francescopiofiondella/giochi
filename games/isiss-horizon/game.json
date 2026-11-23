@@ -1,0 +1,12 @@
+{
+  "name": "Isiss-Horizon",
+  "description": "",
+  "category": "pc",
+  "compat": [
+    "pc"
+  ],
+  "webxr": false,
+  "featured": false,
+  "added": "2026-11-23",
+  "file": "index.html"
+}
