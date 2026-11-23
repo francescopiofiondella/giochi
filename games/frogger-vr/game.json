@@ -1,0 +1,13 @@
+{
+  "name": "Frogger(VR)",
+  "description": "",
+  "category": "vr",
+  "compat": [
+    "vr"
+  ],
+  "webxr": true,
+  "featured": false,
+  "added": "2026-11-23",
+  "file": "index.html",
+  "url": "https://giuseppevenere.altervista.org/vr/frgvrv22.html"
+}
