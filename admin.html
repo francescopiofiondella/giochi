@@ -176,18 +176,20 @@ label.f{display:grid;gap:.3rem;font-size:.82rem;color:var(--m);font-weight:600}
 <label class="f">Token<input id="gh-t" type="password" placeholder="github_pat_..." autocomplete="off" autocapitalize="none" spellcheck="false"></label>
 <div class="row"><button id="conn" type="button">Salva e verifica</button><button id="disc" type="button" class="ghost">Scollega</button><small id="cst"></small></div></div>
 
-<form id="gf" class="panel"><h2 style="margin:0">2 &middot; Aggiungi un gioco</h2>
+<form id="gf" class="panel"><h2 style="margin:0" id="ft">2 &middot; Aggiungi un gioco</h2>
 <label class="f">Nome del gioco<input name="name" placeholder="Es. Halloween Sport VR" required></label>
 <label class="f">Categoria<select name="category"><option value="pc">&#128421; PC</option><option value="mobile">&#128241; Mobile</option><option value="vr">&#129405; VR</option></select></label>
 <label class="f">Descrizione (facoltativa)<textarea name="description" rows="2" placeholder="Una riga sul gioco"></textarea></label>
-<div class="f" style="display:grid;gap:.3rem;font-size:.82rem;color:var(--m);font-weight:600">Come vuoi aggiungerlo?
+<div class="f" id="srcbox" style="display:grid;gap:.3rem;font-size:.82rem;color:var(--m);font-weight:600">Come vuoi aggiungerlo?
 <div class="seg" id="src"><label><input type="radio" name="src" value="link" checked>&#128279; Link</label><label><input type="radio" name="src" value="file">&#128196; Solo file index</label><label><input type="radio" name="src" value="folder">&#128193; Cartella intera</label><label><input type="radio" name="src" value="zip">&#128230; File ZIP</label></div></div>
 <label class="f" id="b-link">Indirizzo del gioco<input name="url" type="url" placeholder="https://..."></label>
 <div class="row hide" id="b-file"><label class="file">Scegli il file index.html<input id="fi" type="file" accept=".html,.htm" hidden></label><small id="fin"></small></div>
 <div class="row hide" id="b-zip"><label class="file">Scegli il file .zip del gioco<input id="zi" type="file" accept=".zip,application/zip" hidden></label><small id="zin"></small></div>
 <div class="row hide" id="b-folder"><label class="file">Scegli la cartella del gioco<input id="di" type="file" webkitdirectory multiple hidden></label><small id="din"></small></div>
+<div class="row"><label class="file">&#128444; Immagine di copertina (facoltativa)<input id="img" type="file" accept="image/*" hidden></label><small id="iinfo"></small><label id="rmc" class="hide"><input type="checkbox" name="rmcover"> Rimuovi copertina</label></div>
+<img id="ipv" class="hide" alt="" style="max-width:220px;border-radius:14px;border:1px solid var(--line)">
 <div class="row"><label><input type="checkbox" name="webxr"> WebXR verificato</label><label><input type="checkbox" name="featured"> In evidenza</label></div>
-<div class="row"><button class="btn big">Salva gioco</button></div><p id="msg"></p></form>
+<div class="row"><button class="btn big" id="sv">Salva gioco</button><button type="button" id="cx" class="ghost hide">Annulla modifica</button></div><p id="msg"></p></form>
 
 <div class="panel"><h2 style="margin:0">Giochi presenti</h2><div id="list">Caricamento&hellip;</div><div class="row"><button id="rs" class="ghost">Aggiorna elenco</button></div></div>
 </section></main>
@@ -254,11 +256,11 @@ $('#disc').onclick=()=>{LSg.del('gh_t');$('#gh-t').value='';stat();$('#list').in
 async function load(){let L=[];
  try{const f=await folders();
   for(const k of f.ids){let m={};if(f.paths.includes('games/'+k+'/game.json')){try{m=await(await api('/contents/games/'+k.split('/').map(encodeURIComponent).join('/')+'/game.json?ref='+encodeURIComponent(GH().b),{headers:{'Accept':'application/vnd.github.raw+json'}})).json()}catch{}}
-   L.push({id:k,name:m.name||k,category:m.category||'pc',url:m.url||''})}
+   L.push({...m,id:k,name:m.name||k,category:m.category||'pc',url:m.url||''})}
  }catch(e){$('#list').innerHTML='<p class="note">'+esc(e.message)+'</p>';return}
- items=L;$('#list').innerHTML=L.length?L.map(g=>`<div class="gi"><b>${esc(g.name)}</b><i class="b ${esc(g.category)}">${CATS[g.category]||''}</i><small>${g.url?'link':'file'}</small><button class="ghost" data-del="${esc(g.id)}">Elimina</button></div>`).join(''):'<p class="note">Nessun gioco nel repository.</p>'}
+ items=L;$('#list').innerHTML=L.length?L.map(g=>`<div class="gi"><b>${esc(g.name)}</b><i class="b ${esc(g.category)}">${CATS[g.category]||''}</i><small>${g.url?'link':'file'}</small><button class="ghost" data-ed="${esc(g.id)}">Modifica</button><button class="ghost" data-del="${esc(g.id)}">Elimina</button></div>`).join(''):'<p class="note">Nessun gioco nel repository.</p>'}
 $('#rs').onclick=load;
-$('#list').onclick=async e=>{const id=e.target.dataset?.del;if(!id||!confirm('Eliminare questo gioco?'))return;
+$('#list').onclick=async e=>{const ed=e.target.dataset?.ed;if(ed){startEdit(ed);return}const id=e.target.dataset?.del;if(!id||!confirm('Eliminare questo gioco?'))return;
  try{const f=await folders(),ch=f.paths.filter(p=>p.startsWith('games/'+id+'/')).map(p=>({path:p,del:true}));
   ch.push(indexFile(f.ids.filter(k=>k!==id)));await commit(ch,'Elimina gioco '+id);msg('Eliminato. Sparisce dal sito tra circa un minuto.','ok');load()}catch(x){alert(x.message)}};
 /* modulo */
@@ -267,35 +269,55 @@ document.querySelectorAll('input[name=src]').forEach(r=>r.onchange=()=>{const v=
 $('#fi').onchange=e=>$('#fin').textContent=e.target.files[0]?.name||'';
 $('#di').onchange=e=>{const fs=[...e.target.files];$('#din').textContent=fs.length?fs[0].webkitRelativePath.split('/')[0]+' \u00b7 '+fs.length+' file':'';if(fs.length&&!F().name.value)F().name.value=fs[0].webkitRelativePath.split('/')[0].replace(/[-_]+/g,' ')};
 const needZip=()=>window.JSZip?Promise.resolve():new Promise((ok,ko)=>{const x=document.createElement('script');x.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';x.onload=ok;x.onerror=()=>ko(new Error('Libreria ZIP non caricata (serve cdnjs.cloudflare.com).'));document.head.append(x)});
+const shrink=f=>new Promise((r,ko)=>{const i=new Image();i.onload=()=>{const k=Math.min(1,640/i.width),c=document.createElement('canvas');c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);c.getContext('2d').drawImage(i,0,0,c.width,c.height);c.toBlob(b=>b?r(b):ko(new Error('Immagine non valida')),'image/jpeg',.82)};i.onerror=()=>ko(new Error('Immagine non leggibile (prova un JPG o PNG)'));i.src=URL.createObjectURL(f)});
 $('#zi').onchange=e=>$('#zin').textContent=e.target.files[0]?.name||'';
-$('#gf').onsubmit=async e=>{e.preventDefault();const f=F(),mode=document.querySelector('input[name=src]:checked').value,name=f.name.value.trim(),id=slug(name),btn=e.submitter;
+$('#img').onchange=e=>{const x=e.target.files[0],p=$('#ipv');$('#iinfo').textContent=x?x.name:'';if(x){p.src=URL.createObjectURL(x);p.classList.remove('hide')}else if(!editing)p.classList.add('hide')};
+let editing=null;
+const srcBlocks=()=>{const v=document.querySelector('input[name=src]:checked')?.value||'link';['link','file','folder','zip'].forEach(k=>$('#b-'+k).classList.toggle('hide',k!==v))};
+function endEdit(){editing=null;$('#gf').reset();$('#ft').innerHTML='2 &middot; Aggiungi un gioco';$('#srcbox').classList.remove('hide');srcBlocks();
+ $('#ipv').classList.add('hide');$('#ipv').removeAttribute('src');$('#iinfo').textContent='';$('#rmc').classList.add('hide');$('#cx').classList.add('hide');$('#sv').textContent='Salva gioco';$('#fin').textContent=$('#din').textContent=$('#zin').textContent=''}
+function startEdit(id){const g=items.find(x=>x.id===id);if(!g)return;endEdit();editing=g;const f=F();
+ f.name.value=g.name||'';f.description.value=g.description||'';f.category.value=g.category||'pc';f.webxr.checked=!!g.webxr;f.featured.checked=!!g.featured;
+ $('#ft').textContent='Modifica: '+g.name;$('#srcbox').classList.add('hide');['file','folder','zip'].forEach(k=>$('#b-'+k).classList.add('hide'));
+ $('#b-link').classList.toggle('hide',!g.url);f.url.value=g.url||'';
+ if(g.cover){$('#ipv').src='games/'+encodeURIComponent(id)+'/'+encodeURI(g.cover);$('#ipv').classList.remove('hide');$('#rmc').classList.remove('hide')}
+ $('#cx').classList.remove('hide');$('#sv').textContent='Salva modifiche';msg('Puoi cambiare nome, descrizione, categoria e copertina. I file del gioco restano com\'è.','note');$('#gf').scrollIntoView({behavior:'smooth'})}
+$('#cx').onclick=()=>{endEdit();msg('')};
+$('#gf').onsubmit=async e=>{e.preventDefault();const f=F(),old=editing,mode=old?'keep':document.querySelector('input[name=src]:checked').value,name=f.name.value.trim(),id=old?old.id:slug(name),btn=e.submitter||$('#sv');
  if(!id){msg('Nome non valido','err');return}
  if(!GH().t){msg('Collega prima GitHub (punto 1).','err');return}
- const meta={name,description:f.description.value.trim(),category:f.category.value,compat:[f.category.value],webxr:f.webxr.checked,featured:f.featured.checked,added:new Date().toISOString().slice(0,10),file:'index.html'};
- const out=[];
+ const meta=old?{...old,name,description:f.description.value.trim(),category:f.category.value,compat:[f.category.value],webxr:f.webxr.checked,featured:f.featured.checked}
+  :{name,description:f.description.value.trim(),category:f.category.value,compat:[f.category.value],webxr:f.webxr.checked,featured:f.featured.checked,added:new Date().toISOString().slice(0,10),file:'index.html'};
+ if(old)delete meta.id;
+ const out=[],extra=[];
  try{
-  if(mode==='link'){const u=f.url.value.trim();if(!/^https?:\/\//i.test(u)){msg('Inserisci un indirizzo che inizi con http:// o https://','err');return}meta.url=u}
+  if(mode==='link'||(old&&old.url)){const u=f.url.value.trim();if(!/^https?:\/\//i.test(u)){msg('Inserisci un indirizzo che inizi con http:// o https://','err');return}meta.url=u}
   else if(mode==='file'){const x=$('#fi').files[0];if(!x){msg('Scegli il file index.html','err');return}out.push({rel:'index.html',buf:await x.arrayBuffer()})}
   else if(mode==='folder'){const fs=[...$('#di').files];if(!fs.length){msg('Scegli la cartella del gioco','err');return}
    for(const x of fs)out.push({rel:x.webkitRelativePath.split('/').slice(1).join('/'),buf:await x.arrayBuffer()})}
-  else{const z=$('#zi').files[0];if(!z){msg('Scegli il file ZIP','err');return}await needZip();const zip=await JSZip.loadAsync(z);
+  else if(mode==='zip'){const z=$('#zi').files[0];if(!z){msg('Scegli il file ZIP','err');return}await needZip();const zip=await JSZip.loadAsync(z);
    const names=Object.keys(zip.files).filter(n=>!zip.files[n].dir&&!/(^|\/)(__MACOSX|\.DS_Store)/.test(n));
    const tops=new Set(names.map(n=>n.split('/')[0])),strip=tops.size===1&&names.every(n=>n.includes('/'))?1:0;
    for(const n of names)out.push({rel:n.split('/').slice(strip).join('/'),buf:await zip.files[n].async('arraybuffer')})}
-  if(mode!=='link'){
+  if(out.length){
    const tops=out.map(o=>o.rel).filter(r=>!r.includes('/')),html=tops.find(x=>/^index\.html?$/i.test(x))||tops.find(x=>/\.html?$/i.test(x));
    if(!html){msg('Non trovo nessun file HTML nella cartella principale del gioco.','err');return}meta.file=html;
    const big=out.find(o=>o.buf.byteLength>100*1024*1024);if(big){msg('Il file '+big.rel+' supera 100 MB: GitHub non lo accetta.','err');return}}
-  if(btn)btn.disabled=true;msg('Controllo repository…');
-  const cur=await folders();if(cur.ids.includes(id)){msg('Esiste già un gioco con questo nome. Eliminalo prima o cambia nome.','err');return}
-  const ch=out.map(o=>({path:'games/'+id+'/'+o.rel,content:b64(o.buf)}));
+  btn.disabled=true;msg('Controllo repository…');
+  const cur=await folders();
+  if(!old&&cur.ids.includes(id)){msg('Esiste già un gioco con questo nome. Eliminalo prima o cambia nome.','err');return}
+  /* copertina */
+  const im=$('#img').files[0],oldCover=old&&old.cover&&/^cover/i.test(old.cover)&&cur.paths.includes('games/'+id+'/'+old.cover)?old.cover:'';
+  if(im){const blob=await shrink(im),cn='cover-'+Date.now()+'.jpg';extra.push({path:'games/'+id+'/'+cn,content:b64(await blob.arrayBuffer())});meta.cover=cn;if(oldCover)extra.push({path:'games/'+id+'/'+oldCover,del:true})}
+  else if(old&&f.rmcover.checked){delete meta.cover;if(oldCover)extra.push({path:'games/'+id+'/'+oldCover,del:true})}
+  const ch=out.map(o=>({path:'games/'+id+'/'+o.rel,content:b64(o.buf)})).concat(extra);
   ch.push({path:'games/'+id+'/game.json',content:txt(JSON.stringify(meta,null,2))});
-  ch.push(indexFile([...cur.ids,id]));
-  msg('Caricamento su GitHub… (0/'+ch.length+')');
-  await commit(ch,'Aggiungi gioco '+name,n=>msg('Caricamento su GitHub… ('+n+'/'+ch.length+')'));
-  msg('Gioco caricato ✔ — compare nel sito entro circa un minuto (pubblicazione di GitHub Pages).','ok');
-  $('#gf').reset();['file','folder','zip'].forEach(k=>$('#b-'+k).classList.add('hide'));$('#b-link').classList.remove('hide');$('#fin').textContent=$('#din').textContent=$('#zin').textContent='';load()}
- catch(err){msg('Errore: '+err.message,'err')}finally{if(btn)btn.disabled=false}};
+  if(!old)ch.push(indexFile([...cur.ids,id]));
+  const tot=ch.filter(x=>!x.del).length;msg('Caricamento su GitHub… (0/'+tot+')');
+  await commit(ch,(old?'Modifica gioco ':'Aggiungi gioco ')+name,n=>msg('Caricamento su GitHub… ('+n+'/'+tot+')'));
+  msg((old?'Modifiche salvate':'Gioco caricato')+' ✔ — visibili nel sito entro circa un minuto (pubblicazione di GitHub Pages).','ok');
+  const was=old;endEdit();msg((was?'Modifiche salvate':'Gioco caricato')+' ✔ — visibili nel sito entro circa un minuto.','ok');load()}
+ catch(err){msg('Errore: '+err.message,'err')}finally{btn.disabled=false}};
 function init(){fill();stat();if(GH().t)load()}
 show();
 </script></body></html>
