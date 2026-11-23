@@ -2,9 +2,9 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta name="theme-color" content="#080c1c">
+<meta name="theme-color" content="#080c1c"><meta name="color-scheme" content="dark"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="format-detection" content="telephone=no">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>ISIS MATESE GAMING ZONE</title>
+<title>ISISS Matese · Gaming Zone</title><meta name="description" content="La Gaming Zone dell'ISISS Matese: giochi per PC, smartphone e visore VR direttamente dal browser.">
 <style>
 :root{--o:#ff7a1a;--y:#ffc21a;--p:#ec2a7e;--t:#12c99b;--bl:#0a8ad6;--bg:#080c1c;--m:#98a2c3;--line:#ffffff1f;--c:var(--t);--b:var(--bl);--v:var(--p)}
 *{box-sizing:border-box}
@@ -156,6 +156,110 @@ input,select,textarea{background:var(--glass);backdrop-filter:blur(10px);border-
 @media(max-width:860px){.hero{padding-top:3rem}.stat{min-width:96px;padding:.7rem 1rem}}
 @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
 .pw{position:relative}.pw input{padding-right:3.4rem}.pw button{position:absolute;right:.35rem;top:50%;transform:translateY(-50%);padding:.4rem .7rem;box-shadow:none}.pw button:hover{transform:translateY(-50%)}
+
+/* ===== MOBILE & UX ===== */
+html{-webkit-text-size-adjust:100%}
+a,button,label,select{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.nav{top:max(.7rem,env(safe-area-inset-top))}
+.wrap{padding-left:max(1rem,env(safe-area-inset-left));padding-right:max(1rem,env(safe-area-inset-right))}
+.acts button,.acts .btn{min-height:44px}
+.fchips{display:flex;gap:.45rem;overflow-x:auto;scrollbar-width:none;flex:1 1 100%;padding-bottom:.2rem}.fchips::-webkit-scrollbar{display:none}
+.fchips a,.fchip{flex:0 0 auto;padding:.5rem 1rem;border-radius:99px;border:1px solid var(--line);background:var(--glass);font-weight:700;font-size:.9rem;color:var(--m);cursor:pointer;white-space:nowrap;min-height:40px;display:inline-flex;align-items:center}
+.fchips a.on,.fchip:has(input:checked){color:#fff;border-color:var(--o);background:linear-gradient(135deg,#ff7a1a40,#ec2a7e40)}
+.empty{color:var(--m);padding:1.5rem 0;text-align:center}
+.empty b{display:block;font-size:2rem}
+#toast{opacity:0;visibility:hidden;transition:transform .5s cubic-bezier(.2,1.2,.4,1),opacity .3s,visibility .3s}#toast.on{opacity:1;visibility:visible}
+#tabs{display:none}
+.pbar b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pbar{padding-top:max(.5rem,env(safe-area-inset-top))}
+#fx{display:none;position:fixed;top:max(.6rem,env(safe-area-inset-top));right:max(.6rem,env(safe-area-inset-right));z-index:70;width:44px;height:44px;padding:0;border-radius:50%;background:#000a;box-shadow:inset 0 0 0 1px #ffffff40}
+.player.full #fx{display:block}.player.full .pbar{display:none}
+@media(hover:none){
+ .card:hover,.cat:hover{transform:none;box-shadow:none}.card:hover .thumb img{transform:none}.card:hover .thumb::after{opacity:0}
+ .btn:hover,button:hover{transform:none;box-shadow:0 6px 20px #ec2a7e40,inset 0 1px 0 #ffffff40}
+}
+@media(max-width:860px){
+ body::before,body::after{animation:none;filter:blur(60px);opacity:.16}
+ html::after{display:none}
+ .hero::before{animation:none;filter:blur(50px)}
+ .card,.cat,.panel,.stat,.ghost,.b,input,select,textarea,.chip,.eyebrow,.thumb::after{backdrop-filter:none;-webkit-backdrop-filter:none}
+ #menu,#burger{display:none!important}
+ .nav{flex-wrap:nowrap;border-radius:999px;padding:.4rem .5rem .4rem .8rem}
+ .brand span{display:inline;font-size:.8rem}
+ #login-btn{margin-left:auto;padding:.5rem 1rem}
+ #tabs{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:max(.6rem,env(safe-area-inset-left));right:max(.6rem,env(safe-area-inset-right));bottom:calc(.6rem + env(safe-area-inset-bottom));z-index:30;padding:.3rem;background:#0b1129f2;border:1px solid #ffffff26;border-radius:24px;box-shadow:0 12px 40px #000b}
+ #tabs a{display:grid;justify-items:center;align-content:center;gap:1px;min-height:50px;border-radius:18px;color:var(--m);font-size:.68rem;font-weight:700}
+ #tabs a em{font-style:normal;font-size:1.3rem;line-height:1.1}
+ #tabs a.on{color:#fff;background:linear-gradient(135deg,#ff7a1a44,#ec2a7e44)}
+ .playing{padding-bottom:0}.playing #tabs{display:none}
+ #toast{bottom:calc(90px + env(safe-area-inset-bottom));max-width:92vw;text-align:center}
+ .foot{margin-top:1.5rem;padding-bottom:calc(6.2rem + env(safe-area-inset-bottom))}
+}
+@media(max-width:560px){
+ .hero{padding:2rem 1rem 1rem}
+ .hero h1{font-size:clamp(2rem,10.5vw,3rem)}
+ .hl{width:min(110px,30vw)}
+ .hero .row.c .btn{flex:1 1 100%;text-align:center}
+ .stats{gap:.5rem;margin-top:1.6rem}.stat{flex:1;min-width:68px;padding:.6rem .4rem;text-align:center}.stat b{font-size:1.35rem}
+ .cats{grid-template-columns:repeat(3,1fr);gap:.6rem}
+ .cat{padding:1rem .5rem;text-align:center;justify-items:center;border-radius:20px}.cat em{font-size:2rem}.cat b{font-size:1.05rem}.cat span{font-size:.72rem}.cat::after{display:none}
+ .sec{font-size:1.3rem;margin:2rem 0 .8rem}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem}
+ .card{border-radius:20px}.thumb{margin:6px 6px 0;border-radius:15px;font-size:2.4rem}
+ .cb{padding:.7rem .75rem .8rem;gap:.35rem}.cb h3{font-size:.98rem;line-height:1.2}
+ .cb p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:.8rem;flex:0 0 auto}
+ .acts{flex-wrap:wrap}.acts .btn{flex:1 1 100%;padding:.7rem}.acts button{flex:1;padding:.5rem}
+ .b{font-size:.6rem;padding:.1rem .45rem}
+ .grid.h{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -1rem;padding:0 1rem .6rem;scrollbar-width:none}
+ .grid.h::-webkit-scrollbar{display:none}.grid.h .card{flex:0 0 66%;scroll-snap-align:start}
+ .tools{gap:.5rem}.tools input[type=search]{flex:1 1 100%;min-width:0}.tools select{flex:1}
+ .panel{padding:1rem;border-radius:22px}
+ .pbar .hm,.pbar [data-qr],.pbar .ext{display:none}.pbar{gap:.4rem}
+}
+
+/* ===== EFFETTI & BARRA ===== */
+@property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes rot{to{--ang:360deg}}
+.btn,button,.fchips a,.fchip{position:relative;overflow:hidden}
+.rip{position:absolute;border-radius:50%;background:#ffffff59;transform:scale(0);animation:rip .65s ease-out forwards;pointer-events:none}
+@keyframes rip{to{transform:scale(1);opacity:0}}
+.btn::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;transform:skewX(-20deg);background:linear-gradient(90deg,transparent,#ffffff55,transparent);animation:shine 4.5s ease-in-out infinite;pointer-events:none}
+.ghost.btn::after,.acts .ghost::after{display:none}
+@keyframes shine{0%,60%{left:-60%}100%{left:130%}}
+.thumb{background-size:220% 220%;animation:gshift 9s ease-in-out infinite alternate}
+@keyframes gshift{to{background-position:100% 100%}}
+.tag{position:absolute;top:10px;z-index:3;font-style:normal;font-weight:900;font-size:.66rem;letter-spacing:.08em;padding:.25rem .6rem;border-radius:99px;box-shadow:0 4px 14px #0008}
+.tag.new{left:10px;color:#fff;background:linear-gradient(135deg,var(--t),var(--bl));animation:glowp 2.2s infinite}
+.tag.star{right:10px;color:#2b1600;background:linear-gradient(135deg,var(--y),var(--o))}
+@keyframes glowp{50%{box-shadow:0 0 0 6px #12c99b33,0 4px 14px #0008}}
+.card::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;z-index:3;opacity:0;transition:opacity .4s;background:conic-gradient(from var(--ang),#ffc21a,#ff7a1a,#ec2a7e,#0a8ad6,#12c99b,#ffc21a);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:rot 4s linear infinite}
+.card:hover::after{opacity:.95}
+@media(hover:hover){.card:hover{transform:perspective(900px) translateY(-8px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) scale(1.012);transition:transform .12s linear,border-color .3s,box-shadow .45s}}
+.fx{position:absolute;inset:0;overflow:hidden;z-index:-1;pointer-events:none}
+.fx i{position:absolute;bottom:-40px;left:var(--l);font-style:normal;font-size:var(--s,1.6rem);opacity:0;animation:rise var(--d,12s) linear infinite;animation-delay:var(--t,0s)}
+@keyframes rise{0%{transform:translateY(0) rotate(0);opacity:0}12%{opacity:.4}85%{opacity:.25}100%{transform:translateY(-760px) rotate(50deg);opacity:0}}
+.sec::before{animation:bar 2.6s ease-in-out infinite alternate}
+@keyframes bar{to{box-shadow:0 0 26px #ffc21aaa;transform:scaleY(1.15)}}
+.sec.reveal::before{transform-origin:top}
+.hl{animation:float 5s ease-in-out infinite,glow 3.2s ease-in-out infinite alternate}
+@keyframes glow{from{filter:drop-shadow(0 14px 30px #0009) drop-shadow(0 0 10px #ec2a7e55)}to{filter:drop-shadow(0 14px 36px #0009) drop-shadow(0 0 34px #ffc21a99)}}
+.nav{transition:background .3s,box-shadow .3s,border-color .3s}
+.nav.scrolled{background:#0a0f26eb;border-color:#ffffff33;box-shadow:0 18px 50px #000c,inset 0 1px 0 #ffffff1a}
+[data-fav].pop{animation:pop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{40%{transform:scale(1.5);color:#ff6fae}}
+@media(max-width:860px){
+ #tabs{isolation:isolate;border:0;padding:.38rem;border-radius:28px;background:linear-gradient(180deg,#171f47f2,#0a0f26f7);box-shadow:0 16px 44px #000c,0 0 34px #ec2a7e26,inset 0 1px 0 #ffffff1f;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);animation:tabsIn .7s cubic-bezier(.2,1.1,.3,1) .2s both}
+ #tabs::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;opacity:.85;background:conic-gradient(from var(--ang),#ffc21a,#ff7a1a,#ec2a7e,#0a8ad6,#12c99b,#ffc21a);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:rot 6s linear infinite}
+ #tabs .ind{position:absolute;top:.38rem;bottom:.38rem;left:0;width:var(--w,20%);transform:translateX(var(--x,0px));border-radius:21px;z-index:-1;background:linear-gradient(135deg,#ff7a1a,#ec2a7e 62%,#b13bff);box-shadow:0 8px 26px #ec2a7e99,inset 0 1px 0 #ffffff66;transition:transform .55s cubic-bezier(.34,1.45,.64,1),width .55s cubic-bezier(.34,1.45,.64,1),opacity .3s}
+ #tabs:not(:has(a.on)) .ind{opacity:0}
+ #tabs a{position:relative;overflow:hidden;min-height:56px;gap:2px;border-radius:21px;font-size:.66rem;letter-spacing:.02em;transition:color .3s;background:none!important}
+ #tabs a svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .5s cubic-bezier(.34,1.8,.64,1)}
+ #tabs a.on{color:#fff}
+ #tabs a.on svg{transform:translateY(-2px) scale(1.14);filter:drop-shadow(0 2px 6px #0006)}
+ #tabs a:active svg{transform:scale(.85)}
+}
+@keyframes tabsIn{from{transform:translateY(130%);opacity:0}}
+@media(prefers-reduced-motion:reduce){.fx{display:none}.btn::after{display:none}}
 </style>
 </head>
 <body>
@@ -164,11 +268,11 @@ input,select,textarea{background:var(--glass);backdrop-filter:blur(10px);border-
 <a class="brand" href="#home"><img alt="ISISS Matese"><span>GAMING ZONE</span></a>
 <nav id="menu"><a href="#home">Home</a><a href="#cat/pc">Giochi PC</a><a href="#cat/mobile">Giochi Mobile</a><a href="#cat/vr">Giochi VR</a><a href="#cerca">Cerca</a></nav>
 <a id="login-btn" class="btn" href="admin.html">ACCEDI</a>
-<button id="burger" aria-label="Menu">☰</button>
 </header>
 <div id="warn" hidden></div>
 <main id="app"></main>
-<div class="foot">I giochi nella cartella <code>games/</code> compaiono da soli: elenco aggiornato ogni 30 secondi.</div>
+<div class="foot">© ISISS Matese · Gaming Zone · <a href="admin.html" style="text-decoration:underline">Area admin</a></div>
+<nav id="tabs" aria-label="Navigazione"><i class="ind"></i><a href="#home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>Home</span></a><a href="#cat/pc"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg><span>PC</span></a><a href="#cat/mobile"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg><span>Mobile</span></a><a href="#cat/vr"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-3.5a2 2 0 0 1-1.7-1l-.8-1.4a1 1 0 0 0-1.8 0l-.8 1.4a2 2 0 0 1-1.7 1H5a2 2 0 0 1-2-2z"/></svg><span>VR</span></a><a href="#cerca"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span>Cerca</span></a></nav>
 <div id="modal" hidden></div>
 <div id="toast" role="status"></div>
 <script>
@@ -176,7 +280,7 @@ input,select,textarea{background:var(--glass);backdrop-filter:blur(10px);border-
 // ogni sottocartella = un gioco (index.html + opzionali game.json e cover.png). Il sito la rilegge da solo.
 // ATTENZIONE: user e hash sono visibili nel sorgente: il login non è una protezione reale (vedi note nel pannello).
 // Password predefinita: matese2026  -> cambiala sostituendo l'hash (SHA-256 della nuova password).
-const CFG={user:'admin',hash:'a6efb0cf20adb70694fccef0e6e9edf36c67a887b38a6941af6e620358de54af'},CATS={pc:'PC',mobile:'Mobile',vr:'VR'},GAMES='games/',POLL=30000;
+const CATS={pc:'PC',mobile:'Mobile',vr:'VR'},GAMES='games/',POLL=30000;
 const $=(s,r=document)=>r.querySelector(s),app=$('#app'),modal=$('#modal');
 const LOGO=$('#loader img').src,ICON={pc:'🖥️',mobile:'📱',vr:'🥽'};
 $('.brand img').src=LOGO;{const l=document.createElement('link');l.rel='icon';l.href=LOGO;document.head.append(l)}
@@ -184,23 +288,11 @@ const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.add('on');clearT
 const hue=s=>[...s].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7)%5;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
 const LS={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
-let games=[],fav=LS.get('gz_fav',[]),admin=(()=>{try{return sessionStorage.getItem('gz_admin')==='1'}catch{return false}})(),S={q:'',sort:'az',fav:false},refill=null,editing=null,dirH=null,tbl=null;
-const slug=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+let games=[],fav=LS.get('gz_fav',[]),S={q:'',sort:'az',fav:false},refill=null;
+const DEV=matchMedia('(pointer:coarse)').matches?'mobile':'pc',recent=()=>LS.get('gz_recent',[]).filter(id=>games.some(g=>g.id===id));
 const ts=g=>Date.parse(g.added)||0;
 const sortG=(a,m)=>[...a].sort(m==='az'?(x,y)=>x.name.localeCompare(y.name,'it'):(x,y)=>ts(y)-ts(x)||y.i-x.i);
 const warn=t=>{const w=$('#warn');w.textContent+=' '+t;w.hidden=false};
-function sha256js(m){const K=[];for(let i=2,n=0;n<64;i++){let p=1;for(let j=2;j*j<=i;j++)if(i%j==0){p=0;break}if(p){K[n++]=(Math.cbrt(i)%1*4294967296)|0}}
- const H=[];for(let i=2,n=0;n<8;i++){let p=1;for(let j=2;j*j<=i;j++)if(i%j==0){p=0;break}if(p){H[n++]=(Math.sqrt(i)%1*4294967296)|0}}
- const b=[...new TextEncoder().encode(m)],l=b.length*8;b.push(128);while(b.length%64!=56)b.push(0);for(let i=7;i>=0;i--)b.push(i>3?0:(l>>>(i*8))&255);
- const r=(x,n)=>(x>>>n)|(x<<(32-n));
- for(let o=0;o<b.length;o+=64){const w=[];for(let i=0;i<16;i++)w[i]=(b[o+i*4]<<24)|(b[o+i*4+1]<<16)|(b[o+i*4+2]<<8)|b[o+i*4+3];
-  for(let i=16;i<64;i++){const a=r(w[i-15],7)^r(w[i-15],18)^(w[i-15]>>>3),c=r(w[i-2],17)^r(w[i-2],19)^(w[i-2]>>>10);w[i]=(w[i-16]+a+w[i-7]+c)|0}
-  let[a,c,d,e,f,g,h,k]=H;
-  for(let i=0;i<64;i++){const t1=(k+(r(f,6)^r(f,11)^r(f,25))+((f&g)^(~f&h))+K[i]+w[i])|0,t2=((r(a,2)^r(a,13)^r(a,22))+((a&c)^(a&d)^(c&d)))|0;k=h;h=g;g=f;f=(e+t1)|0;e=d;d=c;c=a;a=(t1+t2)|0}
-  [a,c,d,e,f,g,h,k].forEach((v,i)=>H[i]=(H[i]+v)|0)}
- return H.map(x=>(x>>>0).toString(16).padStart(8,'0')).join('')}
-const sha=async s=>window.crypto&&crypto.subtle?[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)))].map(x=>x.toString(16).padStart(2,'0')).join(''):sha256js(s);
-const shrink=f=>new Promise(r=>{const i=new Image();i.onload=()=>{const k=Math.min(1,480/i.width),c=document.createElement('canvas');c.width=i.width*k;c.height=i.height*k;c.getContext('2d').drawImage(i,0,0,c.width,c.height);c.toBlob(r,'image/jpeg',.8)};i.src=URL.createObjectURL(f)});
 const gurl=g=>GAMES+encodeURIComponent(g.id)+'/';
 
 /* ---------- Scoperta automatica dei giochi ---------- */
@@ -225,115 +317,46 @@ async function refresh(first){
  const n=await discover(first);if(!first&&JSON.stringify(n)===JSON.stringify(games))return;
  const added=!first&&n.length>games.length;games=n;if(first)return;if(added)toast('🎮 Nuovi giochi disponibili!');
  const r=location.hash.slice(1).split('/')[0]||'home';
- if(r==='home')home();else if(refill)refill();else if(r==='admin'&&tbl)tbl();
+ if(r==='home')home();else if(refill)refill();
 }
 
 /* ---------- Viste ---------- */
 function cv(i){const x=['jpg','jpeg','webp'],n=+i.dataset.n;n<x.length?(i.dataset.n=n+1,i.src=i.dataset.b+'.'+x[n]):i.remove()}
-const cover=g=>g.cover?`<img src="${esc(gurl(g)+encodeURI(g.cover))}" alt="" loading="lazy" onerror="this.remove()">`:`<img src="${esc(gurl(g))}cover.png" data-b="${esc(gurl(g))}cover" data-n="0" alt="" loading="lazy" onerror="cv(this)">`;
+const cover=g=>g.cover?`<img src="${esc(gurl(g)+encodeURI(g.cover))}" alt="" loading="lazy" decoding="async" onerror="this.remove()">`:`<img src="${esc(gurl(g))}cover.png" data-b="${esc(gurl(g))}cover" data-n="0" alt="" loading="lazy" onerror="cv(this)">`;
 const badges=g=>[...new Set([g.category,...(g.compat||[])])].filter(k=>CATS[k]&&(k!=='vr'||g.webxr)).map(k=>`<i class="b ${k}">${CATS[k]}</i>`).join('')+(g.category==='vr'&&!g.webxr?'<i class="b warn">WebXR non verificato</i>':'');
-const card=(g,n)=>`<article class="card" style="--i:${n}"><div class="thumb t${hue(g.id)}"><span>${esc(g.name[0]||'?')}</span>${cover(g)}</div><div class="cb"><div>${badges(g)}</div><h3 style="margin:0">${esc(g.name)}</h3><p>${esc(g.description)}</p><div class="acts"><a class="btn" href="#play/${encodeURIComponent(g.id)}">GIOCA</a><button class="ghost" data-qr="${esc(g.id)}">QR</button><button class="ghost" data-fav="${esc(g.id)}" title="Preferito">${fav.includes(g.id)?'♥':'♡'}</button></div></div></article>`;
-const grid=a=>a.length?`<div class="grid">${a.map(card).join('')}</div>`:'<p style="color:var(--m)">Nessun gioco trovato. Gli amministratori possono aggiungerne dal pannello o copiando una cartella in games/.</p>';
+const card=(g,n)=>`<article class="card" style="--i:${n}"><div class="thumb t${hue(g.id)}"><span>${esc(g.name[0]||'?')}</span>${cover(g)}${(Date.now()-ts(g)<12096e5&&ts(g))?'<i class="tag new">NEW</i>':''}${g.featured?'<i class="tag star">★</i>':''}</div><div class="cb"><div>${badges(g)}</div><h3 style="margin:0">${esc(g.name)}</h3><p>${esc(g.description)}</p><div class="acts"><a class="btn" href="#play/${encodeURIComponent(g.id)}">GIOCA</a><button class="ghost" data-qr="${esc(g.id)}">QR</button><button class="ghost" data-fav="${esc(g.id)}" title="Preferito" aria-label="Preferito">${fav.includes(g.id)?'♥':'♡'}</button></div></div></article>`;
+const grid=(a,c='')=>a.length?`<div class="grid ${c}">${a.map((g,n)=>card(g,n)).join('')}</div>`:'<div class="empty"><b>🎮</b>Nessun gioco trovato.<br>Prova a cambiare ricerca o categoria.</div>';
 
 function home(){
- const f=games.filter(g=>g.featured),n=c=>games.filter(g=>g.category===c).length;
- app.innerHTML=`<section class="hero"><span class="eyebrow"><i></i>Online · aggiornato in tempo reale</span><img class="hl" src="${LOGO}" alt="ISISS Matese"><h1>ISISS MATESE<br>GAMING ZONE</h1><p>Il tuo spazio gaming scolastico: gioca da PC, smartphone e visore VR.</p><div class="row c"><a class="btn big" href="#cerca">ESPLORA I GIOCHI</a><a class="btn ghost big" href="#cat/vr">Prova la VR</a></div><div class="stats"><div class="stat"><b>${games.length}</b><span>Giochi</span></div>${Object.entries(CATS).map(([k,v])=>`<div class="stat"><b>${n(k)}</b><span>${v}</span></div>`).join('')}</div></section><div class="wrap"><div class="cats">${Object.entries(CATS).map(([k,v])=>`<a class="cat ${k}" href="#cat/${k}" style="animation-delay:${Object.keys(CATS).indexOf(k)*80}ms"><em>${ICON[k]}</em><b>${v}</b><span>${n(k)} giochi</span></a>`).join('')}</div><h2 class="sec">In evidenza</h2>${grid((f.length?f:games).slice(0,6))}<h2 class="sec">Aggiunti di recente</h2>${grid(sortG(games,'new').slice(0,6))}</div>`;
+ const f=games.filter(g=>g.featured),n=c=>games.filter(g=>g.category===c).length,rc=recent().map(id=>games.find(g=>g.id===id)).slice(0,6),
+  mine=games.filter(g=>g.category===DEV||(g.compat||[]).includes(DEV)),showMine=mine.length&&mine.length<games.length;
+ app.innerHTML=`<section class="hero"><div class="fx" aria-hidden="true"><i style="--l:6%;--d:14s;--t:-3s;--s:1.9rem">🎮</i><i style="--l:20%;--d:11s;--t:-7s;--s:1.3rem">⭐</i><i style="--l:34%;--d:16s;--t:-1s;--s:1.6rem">👾</i><i style="--l:52%;--d:12s;--t:-9s;--s:2rem">🥽</i><i style="--l:66%;--d:15s;--t:-4s;--s:1.4rem">🕹️</i><i style="--l:80%;--d:13s;--t:-6s;--s:1.8rem">🏆</i><i style="--l:92%;--d:17s;--t:-11s;--s:1.3rem">✨</i></div><span class="eyebrow"><i></i>Online · aggiornato in tempo reale</span><img class="hl" src="${LOGO}" alt="ISISS Matese"><h1>ISISS MATESE<br>GAMING ZONE</h1><p>Il tuo spazio gaming scolastico: gioca da PC, smartphone e visore VR.</p><div class="row c"><a class="btn big" href="#cerca">ESPLORA I GIOCHI</a><a class="btn ghost big" href="#cat/vr">Prova la VR</a></div><div class="stats"><div class="stat"><b>${games.length}</b><span>Giochi</span></div>${Object.entries(CATS).map(([k,v])=>`<div class="stat"><b>${n(k)}</b><span>${v}</span></div>`).join('')}</div></section><div class="wrap"><div class="cats">${Object.entries(CATS).map(([k,v])=>`<a class="cat ${k}" href="#cat/${k}" style="animation-delay:${Object.keys(CATS).indexOf(k)*80}ms"><em>${ICON[k]}</em><b>${v}</b><span>${n(k)} ${n(k)===1?'gioco':'giochi'}</span></a>`).join('')}</div>${rc.length?`<h2 class="sec">Continua a giocare</h2>${grid(rc,'h')}`:''}${showMine?`<h2 class="sec">Per il tuo ${DEV==='mobile'?'telefono':'computer'}</h2>${grid(sortG(mine,'new').slice(0,6),'h')}`:''}<h2 class="sec">In evidenza</h2>${grid((f.length?f:games).slice(0,6),'h')}<h2 class="sec">Aggiunti di recente</h2>${grid(sortG(games,'new').slice(0,6),'h')}</div>`;
+ document.querySelectorAll('.stat b').forEach(countUp);
 }
 
 function list(c='all'){
  if(c!=='all'&&!CATS[c])c='all';
- app.innerHTML=`<section class="wrap"><h1>${c==='all'?'Cerca':'Giochi '+CATS[c]}</h1><div class="tools"><input id="q" type="search" placeholder="Cerca per nome…" value="${esc(S.q)}"><select id="cf">${['all',...Object.keys(CATS)].map(k=>`<option value="${k}"${k===c?' selected':''}>${k==='all'?'Tutte':CATS[k]}</option>`).join('')}</select><select id="so"><option value="az">A–Z</option><option value="new"${S.sort==='new'?' selected':''}>Più recenti</option></select><label><input id="fv" type="checkbox"${S.fav?' checked':''}> Preferiti</label></div><div id="res"></div></section>`;
+ app.innerHTML=`<section class="wrap"><h1>${c==='all'?'Cerca':'Giochi '+CATS[c]}</h1><div class="tools"><input id="q" type="search" enterkeyhint="search" autocomplete="off" placeholder="Cerca per nome…" value="${esc(S.q)}"><div class="fchips" id="cf">${['all',...Object.keys(CATS)].map(k=>`<a href="#${k==='all'?'cerca':'cat/'+k}" class="${k===c?'on':''}">${k==='all'?'Tutti':ICON[k]+' '+CATS[k]}</a>`).join('')}<label class="fchip"><input id="fv" type="checkbox" hidden${S.fav?' checked':''}>♥ Preferiti</label></div><select id="so"><option value="az">A–Z</option><option value="new"${S.sort==='new'?' selected':''}>Più recenti</option></select></div><div id="res"></div></section>`;
  refill=()=>{$('#res').innerHTML=grid(sortG(games.filter(g=>(c==='all'||g.category===c)&&g.name.toLowerCase().includes(S.q.toLowerCase())&&(!S.fav||fav.includes(g.id))),S.sort))};
  $('#q').oninput=e=>{S.q=e.target.value;refill()};$('#so').onchange=e=>{S.sort=e.target.value;refill()};$('#fv').onchange=e=>{S.fav=e.target.checked;refill()};
- $('#cf').onchange=e=>location.hash=e.target.value==='all'?'cerca':'cat/'+e.target.value;
  refill();
-}
-
-function login(){
- if(admin){location.hash='admin';return}
- app.innerHTML=`<section class="wrap narrow"><form id="lf" class="panel"><h1>Accesso amministratori</h1><input id="u" placeholder="Username" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required><div class="pw"><input id="p" type="password" placeholder="Password" autocomplete="current-password" autocapitalize="none" autocorrect="off" required><button type="button" id="eye" class="ghost" aria-label="Mostra password" aria-pressed="false">👁</button></div><p id="err" class="err" hidden></p><button class="btn">ACCEDI</button><a class="btn ghost" href="#home" style="text-align:center">Torna alla homepage</a><p class="note">Una password scritta nel codice di una pagina web può essere letta da chiunque: è solo un filtro leggero. La vera protezione è che solo chi ha accesso alla cartella del sito può aggiungere giochi.</p></form></section>`;
- $('#eye').onclick=()=>{const p=$('#p'),on=p.type==='password';p.type=on?'text':'password';$('#eye').textContent=on?'🙈':'👁';$('#eye').setAttribute('aria-pressed',on)};
- $('#lf').onsubmit=async e=>{e.preventDefault();const er=$('#err');er.hidden=false;
-  if($('#u').value.trim().toLowerCase()===CFG.user&&await sha($('#p').value.trim())===CFG.hash){admin=true;try{sessionStorage.setItem('gz_admin','1')}catch{}if(location.hash==='#admin')route();else location.hash='admin'}else er.textContent='Credenziali errate. Controlla username e password (usa l\'occhio per vedere cosa scrivi).'};
-}
-
-/* ---------- Accesso alla cartella del sito (File System Access API) ---------- */
-const idb=(m,v)=>new Promise(r=>{const o=indexedDB.open('gz',1);o.onupgradeneeded=()=>o.result.createObjectStore('k');o.onerror=()=>r();o.onsuccess=()=>{const s=o.result.transaction('k',m==='get'?'readwrite':'readwrite').objectStore('k'),q=m==='get'?s.get('dir'):s.put(v,'dir');q.onsuccess=()=>r(q.result);q.onerror=()=>r()}});
-async function siteDir(ask){
- if(dirH)return dirH;
- try{const h=await idb('get');if(h){let p=await h.queryPermission({mode:'readwrite'});if(p!=='granted'&&ask)p=await h.requestPermission({mode:'readwrite'});if(p==='granted')return dirH=h}}catch{}
- return null;
-}
-async function pickDir(){dirH=await showDirectoryPicker({mode:'readwrite'});await idb('put',dirH);return dirH}
-const gdir=async()=>(await siteDir(true)).getDirectoryHandle('games',{create:true});
-async function wr(d,name,data){const w=await(await d.getFileHandle(name,{create:true})).createWritable();await w.write(data);await w.close()}
-async function writeIndex(g){const n=[];for await(const[k,h]of g.entries())if(h.kind==='directory'&&!k.startsWith('.'))n.push(k);await wr(g,'index.json',JSON.stringify({folders:n},null,2))}
-
-function adminView(){
- const opts=Object.entries(CATS).map(([k,v])=>`<option value="${k}">${v}</option>`).join(''),fsOk='showDirectoryPicker'in window;
- app.innerHTML=`<section class="wrap"><div class="row"><h1 style="flex:1">Pannello amministratore</h1><button id="out" class="ghost">Esci</button></div>
- <div class="panel"><h2>Cartella del sito</h2><p class="note">I giochi sono le sottocartelle di <code>games/</code>: ogni cartella copiata lì compare da sola nel sito. Per aggiungere giochi da qui, collega la cartella che contiene questo index.html (serve Chrome o Edge su computer).</p><div class="row"><button id="conn"${fsOk?'':' disabled'}>Collega cartella del sito</button><small id="cst"></small></div></div>
- <div class="panel"><h2>URL pubblico del sito (usato nei QR Code)</h2><input id="base" placeholder="https://tuosito.it/gaming-zone/" value="${esc(LS.get('gz_base',''))}"></div>
- <form id="gf" class="panel"><h2 id="ft">Aggiungi gioco</h2><div class="row"><label class="file">Seleziona cartella del gioco<input id="dir" type="file" webkitdirectory multiple hidden></label><small id="dinfo"></small></div>
- <input name="name" placeholder="Nome" required><textarea name="description" placeholder="Descrizione"></textarea><select name="category">${opts}</select>
- <div class="row">Compatibile con: ${Object.entries(CATS).map(([k,v])=>`<label><input type="checkbox" name="c_${k}"> ${v}</label>`).join('')}<label><input type="checkbox" name="webxr"> WebXR verificato</label><label><input type="checkbox" name="featured"> In evidenza</label></div>
- <input name="file" placeholder="Pagina di avvio (index.html)" value="index.html"><div class="row"><label class="file">Copertina (opzionale)<input id="img" type="file" accept="image/*" hidden></label><small id="iinfo"></small></div>
- <div class="row"><button class="btn">Salva gioco</button><button type="button" class="ghost" onclick="adminView()">Annulla</button></div><p id="msg"></p></form>
- <div class="panel"><h2>Giochi presenti</h2><div id="tbl"></div><div class="row"><button id="rs" class="ghost">Rileggi cartella ora</button><button id="ix" class="ghost">Rigenera games/index.json</button></div><p class="note">index.json serve solo se il tuo hosting non mostra l'elenco delle cartelle (es. GitHub Pages): rigeneralo e pubblica anche quel file.</p></div></section>`;
- const F=$('#gf').elements,msg=(t,c='')=>{$('#msg').className=c;$('#msg').textContent=t};
- tbl=()=>{$('#tbl').innerHTML=games.map(g=>`<div class="trow"><b>${esc(g.name)}</b><i class="b ${g.category}">${CATS[g.category]}</i><code>${esc(GAMES+g.id+'/')}</code><button data-ed="${esc(g.id)}">Modifica</button><button class="ghost" data-qr="${esc(g.id)}">QR</button><button class="ghost" data-del="${esc(g.id)}">Elimina</button></div>`).join('')||'Nessun gioco.'};
- tbl();editing=null;
- const st=async()=>{$('#cst').textContent=(await siteDir(false))?'✔ collegata ('+dirH.name+')':'non collegata'};st();
- $('#conn').onclick=async()=>{try{await pickDir();st()}catch{}};
- $('#out').onclick=()=>{try{sessionStorage.removeItem('gz_admin')}catch{}admin=false;location.hash='home'};
- $('#base').onchange=e=>LS.set('gz_base',e.target.value.trim());
- $('#rs').onclick=()=>refresh();
- $('#ix').onclick=async()=>{try{await gdir().then(writeIndex);alert('games/index.json aggiornato')}catch{alert('Collega prima la cartella del sito.')}};
- $('#tbl').onclick=async e=>{const t=e.target.closest('[data-ed],[data-del]');if(!t)return;
-  if(t.dataset.del){if(!confirm('Eliminare il gioco e tutti i suoi file?'))return;
-   try{const g=await gdir();await g.removeEntry(t.dataset.del,{recursive:true});await writeIndex(g);await refresh()}catch{alert('Collega la cartella del sito per eliminare, oppure cancella a mano la cartella in games/.')}return}
-  const g=games.find(x=>x.id===t.dataset.ed);editing=g.id;
-  ['name','description','category'].forEach(k=>F[k].value=g[k]||'');F.file.value=g.file;
-  Object.keys(CATS).forEach(k=>F['c_'+k].checked=(g.compat||[g.category]).includes(k));F.webxr.checked=g.webxr;F.featured.checked=g.featured;
-  $('#ft').textContent='Modifica: '+g.name;scrollTo(0,0)};
- $('#dir').onchange=e=>{const fs=[...e.target.files].map(f=>f.webkitRelativePath);if(!fs.length)return;
-  const root=fs[0].split('/')[0],top=fs.filter(p=>p.split('/').length===2).map(p=>p.split('/')[1]),html=top.find(x=>/^index\.html?$/i.test(x))||top.find(x=>/\.html?$/i.test(x));
-  if(!html){$('#dinfo').textContent='Nessun file HTML nella cartella selezionata.';e.target.value='';return}
-  F.file.value=html;if(!F.name.value)F.name.value=root.replace(/[-_]+/g,' ');
-  $('#dinfo').textContent=`${fs.length} file in "${root}"`};
- $('#img').onchange=e=>$('#iinfo').textContent=e.target.files[0]?.name||'';
- $('#gf').onsubmit=async e=>{e.preventDefault();const v=Object.fromEntries(new FormData(e.target)),old=games.find(x=>x.id===editing)||{},files=[...$('#dir').files],im=$('#img').files[0];
-  const id=editing||slug(v.name);if(!id){msg('Nome non valido','err');return}
-  if(!editing&&games.some(x=>x.id===id)){msg('Esiste già un gioco con questo nome','err');return}
-  if(!editing&&!files.length){msg('Seleziona la cartella del gioco','err');return}
-  const meta={name:v.name.trim(),description:v.description.trim(),category:v.category,compat:Object.keys(CATS).filter(k=>v['c_'+k]||k===v.category),webxr:!!v.webxr,featured:!!v.featured,added:old.added||new Date().toISOString().slice(0,10),file:v.file.trim()||'index.html'};
-  if(old.cover)meta.cover=old.cover;
-  const hasCov=files.map(f=>f.webkitRelativePath.split('/').slice(1)).find(p=>p.length===1&&/^cover\.(png|jpe?g|webp)$/i.test(p[0]));if(hasCov)meta.cover=hasCov[0];
-  const imgBlob=im?await shrink(im):null;if(im)meta.cover='cover.jpg';
-  let g;try{g=await gdir()}catch{g=null}
-  if(!g){ // senza accesso alla cartella: scarica game.json da mettere a mano in games/<cartella>/
-   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(meta,null,2)],{type:'application/json'}));a.download='game.json';a.click();
-   msg('Cartella del sito non collegata: ho scaricato game.json. Copia la cartella del gioco in games/ e metti dentro questo file.','note');return}
-  try{msg('Copia in corso…');const fd=await g.getDirectoryHandle(id,{create:true});
-   for(const f of files){const p=f.webkitRelativePath.split('/').slice(1);let d=fd;for(const s of p.slice(0,-1))d=await d.getDirectoryHandle(s,{create:true});await wr(d,p.at(-1),f)}
-   if(imgBlob)await wr(fd,'cover.jpg',imgBlob);
-   await wr(fd,'game.json',JSON.stringify(meta,null,2));await writeIndex(g);await refresh();msg('Salvato ✔','ok');setTimeout(adminView,700)}
-  catch(err){msg('Errore durante il salvataggio: '+err.message,'err')}};
 }
 
 function play(id){
  const g=games.find(x=>x.id===id);
+ if(g)LS.set('gz_recent',[g.id,...LS.get('gz_recent',[]).filter(x=>x!==g.id)].slice(0,8));
  if(!g){app.innerHTML='<section class="wrap"><h1>Gioco non trovato</h1><a class="btn" href="#home">Torna alla Gaming Zone</a></section>';return}
- app.innerHTML=`<div class="player"><div class="pbar"><a class="btn" href="#home">← Gaming Zone</a><b>${esc(g.name)}</b><span class="sp"></span>${g.url?`<a class="btn ghost" href="${esc(g.url)}" target="_blank" rel="noopener">Apri in nuova scheda</a>`:''}<button class="ghost" data-qr="${esc(g.id)}">QR</button><button id="fs">Schermo intero</button></div><iframe id="gframe" src="${esc(g.url||gurl(g)+encodeURI(g.file))}" title="${esc(g.name)}" allow="fullscreen; autoplay; gamepad; accelerometer; gyroscope; xr-spatial-tracking; clipboard-write" allowfullscreen></iframe></div>`;
+ app.innerHTML=`<div class="player"><div class="pbar"><a class="btn" href="#home">←<span class="hm"> Gaming Zone</span></a><b>${esc(g.name)}</b><span class="sp"></span>${g.url?`<a class="btn ghost ext" href="${esc(g.url)}" target="_blank" rel="noopener">Apri in nuova scheda</a>`:''}<button class="ghost" data-qr="${esc(g.id)}">QR</button><button id="fs">⛶<span class="hm"> Schermo intero</span></button></div><button id="fx" aria-label="Esci dallo schermo intero">✕</button><iframe id="gframe" src="${esc(g.url||gurl(g)+encodeURI(g.file))}" title="${esc(g.name)}" allow="fullscreen; autoplay; gamepad; accelerometer; gyroscope; xr-spatial-tracking; clipboard-write" allowfullscreen></iframe></div>`;
+ $('#fx').onclick=()=>$('.player').classList.remove('full');
  $('#fs').onclick=()=>{const f=$('#gframe'),r=f.requestFullscreen||f.webkitRequestFullscreen,p=$('.player');r?Promise.resolve(r.call(f)).catch(()=>p.classList.toggle('full')):p.classList.toggle('full')};
 }
 
 function qr(id){
  const g=games.find(x=>x.id===id);if(!g)return;
  const base=LS.get('gz_base','').trim(),url=(base?base.replace(/[#?].*$/,'').replace(/\/?$/,'/'):location.href.split('#')[0])+'#play/'+encodeURIComponent(g.id);
- modal.innerHTML=`<div class="box"><h2>${esc(g.name)}</h2><div id="qrc"></div><code>${esc(url)}</code>${/^https?:/.test(url)?'':'<p class="err">Indirizzo locale: il QR funziona solo dopo la pubblicazione (imposta l\'URL pubblico nel pannello admin).</p>'}<div class="row"><button id="dl">Scarica</button><button id="pr">Stampa</button><button id="cl" class="ghost">Chiudi</button></div></div>`;
+ modal.innerHTML=`<div class="box"><h2>${esc(g.name)}</h2><div id="qrc"></div><code>${esc(url)}</code>${/^https?:/.test(url)?'':'<p class="err">Indirizzo locale: il QR funziona solo dopo la pubblicazione (imposta l\'URL pubblico nel pannello admin).</p>'}<div class="row">${navigator.share?'<button id="sh">Condividi</button>':''}<button id="dl">Scarica</button><button id="pr">Stampa</button><button id="cl" class="ghost">Chiudi</button></div></div>`;
  modal.hidden=false;
- $('#cl').onclick=()=>modal.hidden=true;$('#pr').onclick=()=>print();
+ $('#cl').onclick=()=>modal.hidden=true;if($('#sh'))$('#sh').onclick=()=>navigator.share({title:g.name,text:'Gioca a '+g.name+' alla Gaming Zone',url}).catch(()=>{});$('#pr').onclick=()=>print();
  const go=()=>{
  new QRCode($('#qrc'),{text:url,width:256,height:256,correctLevel:QRCode.CorrectLevel.M});
  $('#dl').onclick=()=>{const s=$('#qrc canvas'),c=document.createElement('canvas');c.width=c.height=s.width+64;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(s,32,32);const a=document.createElement('a');a.download='qr-'+g.id+'.png';a.href=c.toDataURL();a.click()};
@@ -341,42 +364,47 @@ function qr(id){
  if(window.QRCode)go();else{const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';sc.onload=go;sc.onerror=()=>{$('#qrc').textContent='Libreria QR non caricata (serve accesso a cdnjs.cloudflare.com).'};document.head.append(sc)}
 }
 
-const R={home,cat:list,cerca:()=>list(),login,admin:adminView,play};
+const toAdmin=()=>{location.replace('admin.html')},R={home,cat:list,cerca:()=>list(),login:toAdmin,admin:toAdmin,play};
 function route(){
- let [r,a]=location.hash.slice(1).split('/');r=r||'home';refill=null;tbl=null;modal.hidden=true;app.classList.remove('pg');void app.offsetWidth;app.classList.add('pg');
+ let [r,a]=location.hash.slice(1).split('/');r=r||'home';refill=null;modal.hidden=true;app.classList.remove('pg');void app.offsetWidth;app.classList.add('pg');
  try{a=a&&decodeURIComponent(a)}catch{}
- if(r==='admin'&&!admin)r='login';
  document.body.classList.toggle('playing',r==='play');
- const lb=$('#login-btn');lb.textContent=admin?'PANNELLO':'ACCEDI';lb.href='admin.html';
- $('#menu').classList.remove('open');
- document.querySelectorAll('#menu a').forEach(x=>x.classList.toggle('on',x.getAttribute('href')==='#'+r+(a&&r==='cat'?'/'+a:'')));
- (R[r]||home)(a);scrollTo(0,0);
+  document.querySelectorAll('#menu a,#tabs a').forEach(x=>x.classList.toggle('on',x.getAttribute('href')==='#'+r+(a&&r==='cat'?'/'+a:'')));
+ tabInd();(R[r]||home)(a);scrollTo(0,0);
 }
 document.addEventListener('click',e=>{
  if(e.target===modal){modal.hidden=true;return}
  const t=e.target.closest('[data-qr],[data-fav]');if(!t)return;
  if(t.dataset.qr){qr(t.dataset.qr);return}
- const id=t.dataset.fav;fav=fav.includes(id)?fav.filter(x=>x!==id):[...fav,id];LS.set('gz_fav',fav);t.textContent=fav.includes(id)?'♥':'♡';if(refill&&S.fav)refill()});
-$('#burger').onclick=()=>$('#menu').classList.toggle('open');
+ const id=t.dataset.fav;fav=fav.includes(id)?fav.filter(x=>x!==id):[...fav,id];LS.set('gz_fav',fav);t.textContent=fav.includes(id)?'♥':'♡';t.classList.remove('pop');void t.offsetWidth;if(fav.includes(id))t.classList.add('pop');if(refill&&S.fav)refill()});
 /* ACCEDI: apre admin.html; se il file non è sul server usa il login interno, così non resta mai "muto" */
 $('#login-btn').addEventListener('click',async e=>{
  e.preventDefault();
  if(location.protocol==='file:'){location.href='admin.html';return}
  try{const r=await fetch('admin.html',{method:'HEAD',cache:'no-store'});if(r.ok){location.href='admin.html';return}}catch{}
  toast('admin.html non trovato accanto a index.html: carica anche quel file sul sito.');
- location.hash=admin?'admin':'login';
 });
 
 /* effetti: spotlight sulle card e comparsa allo scroll */
-document.addEventListener('pointermove',e=>{const t=e.target.closest&&e.target.closest('.card,.cat');if(!t)return;const r=t.getBoundingClientRect();t.style.setProperty('--mx',(e.clientX-r.left)+'px');t.style.setProperty('--my',(e.clientY-r.top)+'px')});
+document.addEventListener('pointermove',e=>{const t=e.target.closest&&e.target.closest('.card,.cat');if(!t)return;const r=t.getBoundingClientRect();t.style.setProperty('--mx',(e.clientX-r.left)+'px');t.style.setProperty('--my',(e.clientY-r.top)+'px');
+ if(e.pointerType==='mouse'&&t.classList.contains('card')){t.style.setProperty('--rx',((.5-(e.clientY-r.top)/r.height)*7).toFixed(2)+'deg');t.style.setProperty('--ry',(((e.clientX-r.left)/r.width-.5)*7).toFixed(2)+'deg')}});
+document.addEventListener('pointerout',e=>{const c=e.target.closest&&e.target.closest('.card');if(c&&!c.contains(e.relatedTarget)){c.style.removeProperty('--rx');c.style.removeProperty('--ry')}});
+const calm=()=>matchMedia('(prefers-reduced-motion:reduce)').matches;
+function countUp(el){const to=+el.textContent||0;if(calm()||!to)return;const t0=performance.now();(function f(t){const k=Math.min(1,(t-t0)/900);el.textContent=Math.round(to*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(f)})(t0)}
+function tabInd(){const t=$('#tabs'),a=t&&t.querySelector('a.on');if(!a)return;t.style.setProperty('--x',a.offsetLeft+'px');t.style.setProperty('--w',a.offsetWidth+'px')}
+addEventListener('resize',tabInd);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(tabInd);
+$('#tabs').addEventListener('click',()=>{try{navigator.vibrate&&navigator.vibrate(8)}catch{}});
+document.addEventListener('pointerdown',e=>{const t=e.target.closest&&e.target.closest('.btn,button,.fchips a,.fchip');if(!t||calm())return;const r=t.getBoundingClientRect(),d=Math.max(r.width,r.height)*2,s=document.createElement('span');s.className='rip';s.style.cssText='width:'+d+'px;height:'+d+'px;left:'+(e.clientX-r.left-d/2)+'px;top:'+(e.clientY-r.top-d/2)+'px';t.append(s);setTimeout(()=>s.remove(),700)});
+addEventListener('scroll',()=>$('.nav').classList.toggle('scrolled',scrollY>20),{passive:true});
 const io='IntersectionObserver'in window?new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.08}):null;
-new MutationObserver(()=>document.querySelectorAll('.sec:not(.reveal)').forEach(el=>{el.classList.add('reveal');io?io.observe(el):el.classList.add('in')})).observe(app,{childList:true});
+new MutationObserver(()=>document.querySelectorAll('.sec:not(.reveal),.grid.h:not(.reveal)').forEach(el=>{el.classList.add('reveal');io?io.observe(el):el.classList.add('in')})).observe(app,{childList:true});
 (async()=>{
  if(location.protocol==='file:')warn('Aperto da file://: il browser blocca la lettura della cartella games/. Pubblica il sito su un server web (o usa un server locale).');
  const t0=performance.now();await refresh(true);
  route();addEventListener('hashchange',route);
+ try{sessionStorage.setItem('gz_seen','1')}catch{}
  const L=$('#loader');$('#ltxt').textContent=games.length+' giochi trovati';
- setTimeout(()=>{$('.bar i').style.cssText='animation:none;width:100%';$('#ltxt').textContent='Pronti!';setTimeout(()=>{L.classList.add('done');setTimeout(()=>L.remove(),700)},350)},Math.max(0,1600-(performance.now()-t0)));
+ setTimeout(()=>{$('.bar i').style.cssText='animation:none;width:100%';$('#ltxt').textContent='Pronti!';setTimeout(()=>{L.classList.add('done');setTimeout(()=>L.remove(),700)},350)},Math.max(0,(sessionStorage.getItem('gz_seen')?150:1200)-(performance.now()-t0)));
  setInterval(()=>{if(!document.hidden&&!/^#play/.test(location.hash))refresh()},POLL);
  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!/^#play/.test(location.hash))refresh()});
 })();
