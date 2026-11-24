@@ -1,0 +1,12 @@
+{
+  "name": "terrafrante",
+  "description": "",
+  "category": "pc",
+  "compat": [
+    "pc"
+  ],
+  "webxr": false,
+  "featured": false,
+  "added": "2026-11-24",
+  "file": "index.html"
+}
