@@ -1,0 +1,13 @@
+{
+  "name": "PitFall VR",
+  "description": "",
+  "category": "vr",
+  "compat": [
+    "vr"
+  ],
+  "webxr": true,
+  "featured": false,
+  "added": "2026-11-27",
+  "file": "index.html",
+  "url": "https://giuseppevenere.altervista.org/pf2vrv30.html"
+}
