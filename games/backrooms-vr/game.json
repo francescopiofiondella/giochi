@@ -1,0 +1,12 @@
+{
+  "name": "Backrooms(VR)",
+  "description": "",
+  "category": "vr",
+  "compat": [
+    "vr"
+  ],
+  "webxr": true,
+  "featured": false,
+  "added": "2026-11-27",
+  "file": "index.html"
+}
